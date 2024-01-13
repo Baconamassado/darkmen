@@ -29,7 +29,7 @@ local uigrad2 = Hotbar.Ability.border2.UIGradient
 MakeWindow({
     Hub = {
         Title = "Dark menu",
-        Animation = "By juju"
+        Animation = "Lib by juju, code by bacon"
     },
     Key = {
         KeySystem = truw,
