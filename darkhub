@@ -190,7 +190,6 @@ local ToggleSpamParry = AddToggle(Main, {
         if Value then
             getgenv().AutoDetectSpam = true
             spamparry()
-            end
         end
     end
 })
