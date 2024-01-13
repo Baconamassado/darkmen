@@ -32,10 +32,10 @@ MakeWindow({
         Animation = "Lib by juju, code by bacon"
     },
     Key = {
-        KeySystem = truw,
+        KeySystem = true,
         Title = "Key System",
-        Description = "Quer a key? apenas amigos.",
-        KeyLink = "",
+        Description = "Este script foi desenvolvido para amigos, caso se interesse, a loja que eu e meu mano estamos desenvolvendo é essa.",
+        KeyLink = "https://discord.gg/C2rg2p3uTs",
         Keys = {"BaconFriends"},
         Notifi = {
             Notifications = true,
@@ -341,7 +341,7 @@ local function Autord(Value)
     end
 end
 
-local Main = MakeTab({Name = "Principal"})
+local Main = MakeTab({Name = "Dark hub"})
 
 local section01 = AddSection(Main, {"Auto - Coisax"})
 
