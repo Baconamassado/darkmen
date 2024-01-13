@@ -193,5 +193,5 @@ local ToggleSpamParry = AddToggle(Main, {
             spamparry()
         end
     end
-))
+})
             
