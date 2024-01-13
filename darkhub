@@ -19,7 +19,6 @@ local abilityButtonPress = replicatedStorage.Remotes.AbilityButtonPress
 local sliderValue = 20
 local distanceVisualizer = nil
 local isRunning = false
-local notifyparried = false
 local PlayerGui = localPlayer:WaitForChild("PlayerGui")
 local Hotbar = PlayerGui:WaitForChild("Hotbar")
 local UseRage = false
