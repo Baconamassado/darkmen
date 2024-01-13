@@ -10,9 +10,6 @@ local VELOCITY_SCALING_FACTOR_SLOW = 0.1
 local IMMEDIATE_PARRY_DISTANCE = 15
 local IMMEDIATE_HIGH_VELOCITY_THRESHOLD = 85
 local UserInputService = game:GetService("UserInputService")
-local responses = {"lol what", "??", "wdym", "bru what", "mad cuz bad", "skill issue", "cry"}
-local gameEndResponses = {"ggs", "gg :3", "good game", "ggs yall", "wp", "ggs man"}
-local keywords = {"auto parry", "auto", "cheating", "hacking"}
 local heartbeatConnection
 local focusedBall, displayBall = nil, nil
 local character = localPlayer.Character or localPlayer.CharacterAdded:Wait()
@@ -166,13 +163,6 @@ local function checkBallDistance()
         if (character.Abilities["Raging Deflection"].Enabled or character.Abilities["Rapture"].Enabled) and UseRage == true then
             if not isCooldownInEffect(uigrad2) then
                 abilityButtonPress:Fire()
-            end
-
-            if isCooldownInEffect(uigrad2) and not isCooldownInEffect(uigrad1) then
-                parryButtonPress:Fire()
-                if notifyparried == true then
-                    notify("Auto Parry", "Parry automaticamente"), 0.3)
-                end
             end
 
         elseif not isCooldownInEffect(uigrad1) then
