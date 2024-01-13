@@ -56,7 +56,6 @@ end
 
 local function spamparry()
     getgenv().AutoDetectSpam = true
-
 --///////////////////////////////////////////////////////////////////--
 
 local Alive = workspace:WaitForChild("Alive", 9e9)
@@ -189,7 +188,7 @@ local ToggleSpamParry = AddToggle(Main, {
     Default = false,
     Callback = function(Value)
         if Value then
-            getgenv().spamparry = spamparry
+            getgenv().AutoDetectSpam = true
             spamparry()
             end
         end
