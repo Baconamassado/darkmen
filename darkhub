@@ -329,13 +329,25 @@ Balls.ChildAdded:Connect(function(ball)
   GetBall(ball)
 end)
 
+local function Autord(Value)
+    if Value then
+        startuju()
+        UseRage = Value
+        notify("Auto Parry", "Auto Parry with Ability has been started", 1)
+    else
+        stopjujuy()
+        UseRage = Value
+        notify("Auto Parry", "Auto Parry with Ability has been disabled", 1)
+    end
+end
+
 local Main = MakeTab({Name = "Principal"})
 
 local section01 = AddSection(Main, {"Auto - Coisax"})
 
 local ToggleAutoParry = AddToggle(Main, {
     Name = "Auto Parry",
-    Default = false,
+    Default = true,
     Callback = function(Value)
         if Value then
             getgenv().juju = juju
@@ -350,7 +362,18 @@ local ToggleSpamParry = AddToggle(Main, {
     Callback = function(Value)
         if Value then
             getgenv().AutoDetectSpam = true
-            spamparry()
+            AutoDetectSpam()
+        end
+    end
+})
+
+local ToggleAutoRagingDeflect = AddToggle(Main, {
+    Name = "Auto Raging Deflect",
+    Default = false,
+    Callback = function(Value)
+        if Value then
+            getgenv().Autord = true
+            Autord(Value)
         end
     end
 })
