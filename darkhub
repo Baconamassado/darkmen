@@ -32,11 +32,11 @@ MakeWindow({
         Animation = "By juju"
     },
     Key = {
-        KeySystem = false,
+        KeySystem = truw,
         Title = "Key System",
-        Description = "",
+        Description = "Quer a key? apenas amigos.",
         KeyLink = "",
-        Keys = {"1234"},
+        Keys = {"BaconFriends"},
         Notifi = {
             Notifications = true,
             CorrectKey = "Running the Script...",
