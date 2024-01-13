@@ -191,7 +191,7 @@ local ToggleSpamParry = AddToggle(Main, {
         if Value then
             getgenv().spamparry = spamparry
             spamparry()
+            end
         end
     end
-})
             
