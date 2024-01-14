@@ -377,3 +377,14 @@ local ToggleAutoRagingDeflect = AddToggle(Main, {
         end
     end
 end
+local ToggleAutoRagingDeflect = AddToggle(Main, {
+    Name = "Auto Raging Deflect",
+    Default = false,
+    Callback = function(Value)
+        if Value then
+            getgenv().Autord = true
+            Autord(Value)
+        end
+    end
+end)
+}
