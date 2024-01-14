@@ -34,12 +34,12 @@ MakeWindow({
     Key = {
         KeySystem = true,
         Title = "Key System",
-        Description = "Este script foi desenvolvido para amigos, caso se interesse, a loja que eu e meu mano estamos desenvolvendo é essa.",
+        Description = "Sla eu quis colocar uma key",
         KeyLink = "",
         Keys = {"BaconFriends"},
         Notifi = {
             Notifications = true,
-            CorrectKey = "Iniciando o script...", "Comendo sua mãe...",
+            CorrectKey = "Iniciando o script...",
             Incorrectkey = "Bom, sem pai, sem key. Key incorreta.",
             CopyKeyLink = "Copied to Clipboard"
         }
