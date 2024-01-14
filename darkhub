@@ -215,7 +215,7 @@ local function stopAutoParry()
     isRunning = false
 end
 
-local function spamparry()
+local function AutoDetectSpam()
     getgenv().AutoDetectSpam = true
 --///////////////////////////////////////////////////////////////////--
 
@@ -374,7 +374,6 @@ local ToggleAutoRagingDeflect = AddToggle(Main, {
         if Value then
             getgenv().Autord = true
             Autord(Value)
-            end
+        end
     end
-end
-})})})
+})
