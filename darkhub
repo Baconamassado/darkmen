@@ -66,7 +66,7 @@ local Window = Rayfield:CreateWindow({
    }
 })
 
-local AutoParry = Window:CreateTab("Auto Parry", 13014537525)
+local AutoParry = Window:CreateTab("Auto coisax", 13014537525)
 
 if character then
     print("Character found.")
@@ -438,5 +438,32 @@ players.PlayerChatted:Connect(function(PlayerChatType,Player,Message)
             task.wait(2,5)
             responsedebounce = false
         end
+    end
+end)
+
+
+local AutoParry = Window:CreateTab("Misc", 13014537525)
+
+local function setWalkspeed(player, value)
+    local character = player.Character
+    if character then
+        local humanoid = character:FindFirstChildOfClass("Humanoid")
+        if humanoid then
+            humanoid.WalkSpeed = tonumber(value) or humanoid.WalkSpeed
+        end
+    end
+end
+
+-- Conectar a função ao evento Touched do ray field
+rayField.Touched:Connect(function(other)
+    local character = other.Parent
+    local humanoid = character:FindFirstChildOfClass("Humanoid")
+
+    if humanoid and humanoid:IsA("Humanoid") then
+        -- Perguntar ao jogador o valor desejado
+        local input = tostring(prompt("Digite o novo valor de Walkspeed:"))
+
+        -- Modificar o Walkspeed com base no número digitado
+        setWalkspeed(character.Parent, input)
     end
 end)
