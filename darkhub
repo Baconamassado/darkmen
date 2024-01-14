@@ -58,7 +58,7 @@ MinimizeButton({
 -- Tabs
 
 local function juju()
-local function chooseNewFocusedBall()
+    local function chooseNewFocusedBall()
     local balls = ballsFolder:GetChildren()
     for _, ball in ipairs(balls) do
         if ball:GetAttribute("realBall") ~= nil and ball:GetAttribute("realBall") == true then
