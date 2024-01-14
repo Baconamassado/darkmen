@@ -375,5 +375,4 @@ local ToggleAutoRagingDeflect = AddToggle(Main, {
             getgenv().Autord = true
             Autord(Value)
         end
-    end
 })
