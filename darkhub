@@ -1,5 +1,3 @@
-loadstring(game:HttpGet("https://raw.githubusercontent.com/REDzHUB/LibraryV2/main/redzLib"))()
-
 local workspace = game:GetService("Workspace")
 local players = game:GetService("Players")
 local replicatedStorage = game:GetService("ReplicatedStorage")
@@ -10,6 +8,9 @@ local VELOCITY_SCALING_FACTOR_SLOW = 0.1
 local IMMEDIATE_PARRY_DISTANCE = 15
 local IMMEDIATE_HIGH_VELOCITY_THRESHOLD = 85
 local UserInputService = game:GetService("UserInputService")
+local responses = {"kakakakak que?", "??", "bom, se você acha.", "bro??? que?", "com raiva por que é ruim kakakakakak", "falta de habilidade", "chora"}
+local gameEndResponses = {"gg", "gg :3", "bom jogo", "jogaram muito", "jogaram demais slk", "gg mano"}
+local keywords = {"auto parry", "auto", "cheat", "hack", "script"}
 local heartbeatConnection
 local focusedBall, displayBall = nil, nil
 local character = localPlayer.Character or localPlayer.CharacterAdded:Wait()
@@ -19,6 +20,7 @@ local abilityButtonPress = replicatedStorage.Remotes.AbilityButtonPress
 local sliderValue = 20
 local distanceVisualizer = nil
 local isRunning = false
+local notifyparried = false
 local PlayerGui = localPlayer:WaitForChild("PlayerGui")
 local Hotbar = PlayerGui:WaitForChild("Hotbar")
 local UseRage = false
@@ -26,39 +28,63 @@ local UseRage = false
 local uigrad1 = Hotbar.Block.border1.UIGradient
 local uigrad2 = Hotbar.Ability.border2.UIGradient
 
-MakeWindow({
-    Hub = {
-        Title = "Dark hub - Outra lib em breve...",
-        Animation = "By bacon"
-    },
-    Key = {
-        KeySystem = true,
-        Title = "Key System",
-        Description = "Sla eu quis colocar uma key",
-        KeyLink = "",
-        Keys = {"BaconFriends"},
-        Notifi = {
-            Notifications = true,
-            CorrectKey = "Iniciando o script...",
-            Incorrectkey = "Bom, sem pai, sem key. Key incorreta.",
-            CopyKeyLink = "Copied to Clipboard"
-        }
-    }
+
+local function isPlayerOnMobile()
+    return UserInputService.TouchEnabled and not (UserInputService.KeyboardEnabled or UserInputService.GamepadEnabled)
+end
+
+local RayfieldURL = isPlayerOnMobile() and 
+                    'https://raw.githubusercontent.com/Hosvile/Refinement/main/MC%3AArrayfield%20Library' or 
+                    'https://sirius.menu/rayfield'
+
+local Rayfield = loadstring(game:HttpGet(RayfieldURL))()
+
+
+local Window = Rayfield:CreateWindow({
+   Name = "Blade Ball",
+   LoadingTitle = "by bacon - 90% chat gpt/open source, 10% natural",
+   LoadingSubtitle = "bacon lindo",
+   ConfigurationSaving = {
+      Enabled = false,
+      FolderName = "Bacon iniciante né pae",
+      FileName = "auto parry"
+   },
+   Discord = {
+      Enabled = false,
+      Invite = "",
+      RememberJoins = false
+   },
+   KeySystem = false,
+   KeySettings = {
+      Title = "Bacon - Blade ball ",
+      Subtitle = "Key System",
+      Note = "Bom, se você tem isso é um amigo meu, pede a key nova no pv",
+      FileName = "InfernoKey",
+      SaveKey = true,
+      GrabKeyFromSite = false,
+      Key = "BaconFriends"
+   }
 })
 
-MinimizeButton({
-    Image = "",
-    Size = {75, 40},
-    Color = Color3.fromRGB(10, 10, 10),
-    Corner = true,
-    Stroke = true,
-    StrokeColor = Color3.fromRGB(255, 255, 255)
-})
+local AutoParry = Window:CreateTab("Auto Parry", 13014537525)
 
--- Tabs
+if character then
+    print("Character found.")
+else
+    print("Character not found.")
+    return
+end
 
-local function juju()
-    local function chooseNewFocusedBall()
+local function notify(title, content, duration)
+    Rayfield:Notify({
+        Title = title,
+        Content = content,
+        Duration = duration or 0.7,
+        Image = 10010348543
+    })
+end
+
+local function chooseNewFocusedBall()
     local balls = ballsFolder:GetChildren()
     for _, ball in ipairs(balls) do
         if ball:GetAttribute("realBall") ~= nil and ball:GetAttribute("realBall") == true then
@@ -122,7 +148,7 @@ end
 local function checkIfTarget()
     for _, v in pairs(ballsFolder:GetChildren()) do
         if v:IsA("Part") and v.BrickColor == BrickColor.new("Really red") then 
-            print("Bola mirando em você.")
+            print("Bola mirando no player")
             return true 
         end 
     end 
@@ -141,11 +167,11 @@ local function checkBallDistance()
     local charVel = character.PrimaryPart.Velocity
 
     if focusedBall and not focusedBall.Parent then
-        print("Cu")
+        print("Bom ,deu merda. Cheirinho de buceta")
         chooseNewFocusedBall()
     end
     if not focusedBall then 
-        print("Sem bola parada.")
+        print("No focused ball.")
         chooseNewFocusedBall()
     end
 
@@ -164,13 +190,20 @@ local function checkBallDistance()
                 abilityButtonPress:Fire()
             end
 
+            if isCooldownInEffect(uigrad2) and not isCooldownInEffect(uigrad1) then
+                parryButtonPress:Fire()
+                if notifyparried == true then
+                    notify("Auto Parry", "Parry manual, habilidade em cooldown.", 0.3)
+                end
+            end
+
         elseif not isCooldownInEffect(uigrad1) then
             print(isCooldownInEffect(uigrad1))
             parryButtonPress:Fire()
             if notifyparried == true then
-                notify("Auto Parry", "Funcionando", 15)
+                notify("Auto Parry", "Automatically Parried Ball", 0.3)
             end
-            task.wait(15)
+            task.wait(0.3)
         end
     end
 end
@@ -202,7 +235,7 @@ end)
 
 
 local function startAutoParry()
-    print("Script funcionando corretamente")
+    print("Script funcionando.")
     
     chooseNewFocusedBall()
     
@@ -215,166 +248,195 @@ local function stopAutoParry()
     isRunning = false
 end
 
-local function AutoDetectSpam()
-    getgenv().AutoDetectSpam = true
---///////////////////////////////////////////////////////////////////--
 
-local Alive = workspace:WaitForChild("Alive", 9e9)
-local Players = game:GetService("Players")
-local Player = Players.LocalPlayer
+local AutoParrySection = AutoParry:CreateSection("Auto Parry")
 
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Remotes = ReplicatedStorage:WaitForChild("Remotes", 9e9)
-local ParryAttempt = Remotes:WaitForChild("ParryAttempt", 9e9)
-local Balls = workspace:WaitForChild("Balls", 9e9)
-
---///////////////////////////////////////////////////////////////////--
-
-local function get_ProxyPlayer()
-  local Distance = math.huge
-  local plrRP = Player.Character and Player.Character:FindFirstChild("HumanoidRootPart")
-  local PlayerReturn = nil
-  
-  for _,plr1 in pairs(Alive:GetChildren()) do
-    if plr1:FindFirstChild("Humanoid") and plr1.Humanoid.Health > 50 then
-      if plr1.Name ~= Player.Name and plrRP and plr1:FindFirstChild("HumanoidRootPart") then
-        local magnitude = (plr1.HumanoidRootPart.Position - plrRP.Position).Magnitude
-        if magnitude <= Distance then
-          Distance = magnitude
-          PlayerReturn = plr1
-        end
-      end
-    end
-  end
-  return PlayerReturn
-end
-
-local function SuperClick()
-  task.spawn(function()
-    if IsAlive() and #Alive:GetChildren() > 1 then
-      local args1 = 0.5
-      local args2 = CFrame.new()
-      local args3 = {["enzo"] = Vector3.new()}
-      local args4 = {500, 500}
-      
-      if args1 and args2 and args3 and args4 then
-        ParryAttempt:FireServer(args1, args2, args3, args4)
-      end
-    end
-  end)
-end
-
-task.spawn(function()
-  while task.wait() do
-    if getgenv().SpamClickA and getgenv().AutoDetectSpam then
-      SuperClick()
-    end
-  end
-end)
-
-local ParryCounter = 0
-local DetectSpamDistance = 0
-
-local function GetBall(ball)
-  local Target = ""
-  
-  ball:GetPropertyChangedSignal("Position"):Connect(function()
-    local PlayerPP = Player and Player.Character and Player.Character.PrimaryPart
-    local NearestPlayer = get_ProxyPlayer()
-    
-    if ball and PlayerPP and NearestPlayer and NearestPlayer.PrimaryPart then
-      local PlayerDistance = (PlayerPP.Position - NearestPlayer.PrimaryPart.Position).Magnitude
-      local BallDistance = (PlayerPP.Position - ball.Position).Magnitude
-      
-      DetectSpamDistance = 25 + math.clamp(ParryCounter / 3, 0, 25)
-      
-      if ParryCounter > 2 and PlayerDistance < DetectSpamDistance and BallDistance < 55 then
-        getgenv().SpamClickA = true
-      else
-        getgenv().SpamClickA = false
-      end
-    end
-  end)
-  ball:GetAttributeChangedSignal("target"):Connect(function()
-    Target = ball:GetAttribute("target")
-    local NearestPlayer = get_ProxyPlayer()
-    
-    if NearestPlayer then
-      if Target == NearestPlayer.Name or Target == Player.Name then
-        ParryCounter = ParryCounter + 1
-      else
-        ParryCounter = 0
-      end
-    end
-  end)
-end
-
-for _,ball in pairs(Balls:GetChildren()) do
-  if ball and not ball:GetAttribute("realBall") then
-    return
-  end
-  
-  GetBall(ball)
-end
-
-Balls.ChildAdded:Connect(function(ball)
-  if not getgenv().AutoDetectSpam then
-    return
-  elseif ball and not ball:GetAttribute("realBall") then
-    return
-  end
-  
-  getgenv().SpamClickA = false
-  ParryCounter = 0
-  GetBall(ball)
-end)
-
-local function Autord(Value)
-    if Value then
-        startuju()
-        UseRage = Value
-        notify("Auto Parry", "Auto Parry with Ability has been started", 1)
-    else
-        stopjujuy()
-        UseRage = Value
-        notify("Auto Parry", "Auto Parry with Ability has been disabled", 1)
-    end
-end
-
-local Main = MakeTab({Name = "Dark hub"})
-
-local section01 = AddSection(Main, {"Auto - Coisax"})
-
-local ToggleAutoParry = AddToggle(Main, {
+local AutoParryToggle = AutoParry:CreateToggle({
     Name = "Auto Parry",
-    Default = true,
+    CurrentValue = false,
+    Flag = "AutoParryFlag",
     Callback = function(Value)
         if Value then
-            getgenv().juju = juju
-            juju()
+            startAutoParry()
+            notify("Auto Parry", "Auto parry iniciado, Super click force injetado", 1)
+        else
+            stopAutoParry()
+            notify("Auto Parry", "Retirando o Super click inject imediatamente...", 1)
         end
+    end,
+})
+
+
+local AutoRagingDeflect = AutoParry:CreateToggle({
+    Name = "Auto Rage Parry/Rapture Parry (Equipe a habilidade)",
+    CurrentValue = false,
+    Flag = "AutoRagingDeflectFlag",
+    Callback = function(Value)
+        if Value then
+            startAutoParry()
+            UseRage = Value
+            notify("Auto Parry", "Auto parry com habilidade iniciado.", 1)
+        else
+            stopAutoParry()
+            UseRage = Value
+            notify("Auto Parry", "Auto parry com habilidade desativado.", 1)
+        end
+    end,
+})
+
+
+
+local CloseFighting = AutoParry:CreateSection("Close Fighting")
+ local SpamParry = AutoParry:CreateKeybind({
+    Name = "Spam Parry",
+    CurrentKeybind = "E",
+    HoldToInteract = false,
+    Flag = "ToggleParrySpam", 
+    Callback = function(Keybind)
+        parryButtonPress:Fire()
+    end,
+ })
+ 
+
+local Configuration = AutoParry:CreateSection("Configuration")
+
+local DistanceSlider = AutoParry:CreateSlider({
+    Name = "Distancia",
+    Range = {0, 100},
+    Increment = 1,
+    Suffix = "Distance",
+    CurrentValue = 20,
+    Flag = "DistanceSlider",
+    Callback = function(Value)
+        sliderValue = Value
+    end,
+ })
+
+local ToggleParryOn = AutoParry:CreateKeybind({
+   Name = "Ativar o parry (tecla)",
+   CurrentKeybind = "One",
+   HoldToInteract = false,
+   Flag = "ToggleParryOn", 
+   Callback = function(Keybind)
+AutoParryToggle:Set(true)
+
+   end
+})
+
+
+
+local ToggleParryOff = AutoParry:CreateKeybind({
+   Name = "Desativar o auto parry (tecla)",
+   CurrentKeybind = "Two",
+   HoldToInteract = false,
+   Flag = "ToggleParryOff",
+   Callback = function(Keybind)
+   AutoParryToggle:Set(false)
+   end,
+})
+
+local ToggleParryOffPlus = AutoParry:CreateKeybind({
+    Name = "+ 10 range",
+    CurrentKeybind = "X",
+    HoldToInteract = false,
+    Flag = "ToggleParryOffPlus",
+    Callback = function()
+         if sliderValue < 200 then
+             sliderValue = sliderValue + 10
+             DistanceSlider:Set(sliderValue)
+             notify("Range aumentado", "Novo Range: " .. sliderValue)
+         end
+    end,
+ })
+ 
+ local ToggleParryOffMinus = AutoParry:CreateKeybind({
+    Name = "- 10 range",
+    CurrentKeybind = "Z",
+    HoldToInteract = false,
+    Flag = "ToggleParryOffMinus",
+    Callback = function()
+         if sliderValue > 0 then
+             sliderValue = sliderValue - 10
+             DistanceSlider:Set(sliderValue)
+             notify("Range diminuido", "Novo Range: " .. sliderValue)
+         end
+    end,
+ })
+
+local AutoGGToggle = AutoParry:CreateToggle({
+    Name = "Auto GG",
+    CurrentValue = false,
+    Flag = "AutoGGFlage",
+    Callback = function(Value)
+        return
     end
 })
 
-local ToggleSpamParry = AddToggle(Main, {
-    Name = "Auto Spam Parry",
-    Default = false,
+local AutoResponseToggle = AutoParry:CreateToggle({
+    Name = "Auto Responder acusações",
+    CurrentValue = false,
+    Flag = "AutoResponseFlage",
     Callback = function(Value)
-        if Value then
-            getgenv().AutoDetectSpam = true
-            AutoDetectSpam()
-        end
+        return
     end
 })
 
-local ToggleAutoRagingDeflect = AddToggle(Main, {
-    Name = "Auto Raging Deflect",
-    Default = false,
-    Callback = function(Value)
-        if Value then
-            getgenv().Autord = true
-            Autord()
-            end
+local notifyparriedthing = AutoParry:CreateButton({
+    Name = "Notificar auto parry",
+    Callback = function()
+        if not notifyparried == true then
+            notifyparried = true
+            notify("Auto Parry", "Notificar o auto parry ligado", 0.7)
+        else
+            notifyparried = false
+            notify("Auto Parry", "Notificar o auto parry desligado", 0.7)
+        end
+    end,
+ })
+
+ local ChangeDistanceTo30thing = AutoParry:CreateKeybind({
+    Name = "Distancia 30",
+    CurrentKeybind = "V",
+    HoldToInteract = false,
+    Flag = "Distanceto100", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+    Callback = function(Keybind)
+ DistanceSlider:Set(30) -- The new slider integer value
+ sliderValue = 30
+ notify("Range Set", "Novo Range: " .. sliderValue)
+    end,
+ })
+ 
+ local ChangeDistanceTo100thing = AutoParry:CreateKeybind({
+    Name = "Distancia 100",
+    CurrentKeybind = "B",
+    HoldToInteract = false,
+    Flag = "Distanceto100", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+    Callback = function(Keybind)
+     sliderValue = 100
+ DistanceSlider:Set(100) -- The new slider integer value
+ notify("Range Set", "Novo Range: " .. sliderValue)
+    end,
+ })
+
+workspace:FindFirstChild("Alive").ChildRemoved:Connect(function()
+    if #(workspace.Alive:GetChildren()) <= 1 and AutoGGToggle.CurrentValue and not ggdebounce then
+        ggdebounce = true
+        local randomResponse = math.random(1, #gameEndResponses)
+        wait(math.random(2,3.5))
+        replicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer(gameEndResponses[randomResponse],"All")
+        task.wait(math.random(1.5,3.3))
+        ggdebounce = false
+    end
+end)
+
+players.PlayerChatted:Connect(function(PlayerChatType,Player,Message)
+    for _,v in pairs(keywords) do
+        if (string.find(Message, v)) and Player ~= localPlayer and AutoResponseToggle.CurrentValue and not responsedebounce then
+            responsedebounce = true
+            local choice = math.random(1, #responses)
+            replicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer(responses[choice],"All")
+            task.wait(2,5)
+            responsedebounce = false
         end
     end
-})
+end)
