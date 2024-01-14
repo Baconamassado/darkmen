@@ -377,4 +377,4 @@ local ToggleAutoRagingDeflect = AddToggle(Main, {
             end
     end
 end
-})
+})})
