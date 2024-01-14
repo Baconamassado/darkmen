@@ -28,19 +28,19 @@ local uigrad2 = Hotbar.Ability.border2.UIGradient
 
 MakeWindow({
     Hub = {
-        Title = "Dark menu",
-        Animation = "Lib by juju, code by bacon"
+        Title = "Dark hub - Outra lib em breve...",
+        Animation = "By bacon"
     },
     Key = {
         KeySystem = true,
         Title = "Key System",
         Description = "Este script foi desenvolvido para amigos, caso se interesse, a loja que eu e meu mano estamos desenvolvendo é essa.",
-        KeyLink = "https://discord.gg/C2rg2p3uTs",
+        KeyLink = "",
         Keys = {"BaconFriends"},
         Notifi = {
             Notifications = true,
-            CorrectKey = "Running the Script...",
-            Incorrectkey = "The key is incorrect",
+            CorrectKey = "Iniciando o script...", "Comendo sua mãe...",
+            Incorrectkey = "Bom, sem pai, sem key. Key incorreta.",
             CopyKeyLink = "Copied to Clipboard"
         }
     }
